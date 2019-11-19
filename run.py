@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import json
-import subprocess
 import os
 import time
 from optparse import OptionParser
@@ -8,7 +7,7 @@ from optparse import OptionParser
 from flask import Flask, request
 
 app = Flask(__name__)
-secret_path = '/lain/app/deploy/secrets.json'
+secret_path = '/lain/app/deploy/topsecret.txt'
 
 
 def parse():
@@ -23,22 +22,14 @@ def parse():
 port, sleep, interval = parse()
 
 
-@app.route('/echo')
-def echo():
-    msg = 'Request Headers: {}'.format(request.headers)
-    return msg
-
-
 @app.route('/')
 def index():
-    xff = request.headers.get('X-Forwarded-For', 'no xff set')
-    host_ip = subprocess.check_output(['hostname', '-i']).strip()
     try:
         secret = open(secret_path).read()
     except FileNotFoundError:
         secret = ''
 
-    res = {'xff': xff, 'hostname': host_ip, 'env': os.environ, 'secretfile': secret}
+    res = {'env': dict(os.environ), 'secretfile': secret}
     return json.dumps(res)
 
 

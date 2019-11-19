@@ -1,10 +1,10 @@
-REPO := ccr.ccs.tencentyun.com/ein-lain/dummy
-TAG := $(shell date +%Y%m%d)
+REPO := registry.poc.ein.plus/dummy
+TAG := $(shell legacy_lain meta)
 PORT := 5000
 
 .PHONY: build
 build:
-	docker build --squash -t $(REPO):$(TAG) .
+	docker build --squash -t $(REPO):release-$(TAG) .
 
 .PHONY: push
 push:
@@ -12,4 +12,5 @@ push:
 
 .PHONY: run
 run:
-	docker run -it --publish $(PORT):$(PORT) --rm $(REPO):$(TAG) ./run.py --port $(PORT)
+	# docker run -it --publish $(PORT):$(PORT) --rm $(REPO):release-$(TAG) ./run.py --port $(PORT)
+	docker run -it --publish $(PORT):$(PORT) --rm $(REPO):release-$(TAG) bash

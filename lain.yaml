@@ -1,0 +1,43 @@
+appname: dummy
+
+build:
+  base: registry.lain.ein.plus/einplus/centos-base:20190925-slim
+  prepare:
+    version: 1
+    script:
+      - pip3.6 install -U pip -i https://pypi.doubanio.com/simple/
+    keep:
+      - src
+  script:
+    - pip3.6 install --exists-action=w -r requirements.txt
+
+web:
+  cmd: ['run.sh']
+  port: 5000
+  memory: 20M
+  env:
+    - FOO=BAR
+  secret_files:
+    - /lain/app/deploy/secrets.json
+
+worker:
+  cmd: ['./worker.py']
+  memory: 20m
+  env:
+    - SPAM=EGG
+  secret_files:
+    - /lain/app/deploy/secrets.json
+
+cron.useless:
+  cmd: ['ls']
+  memory: 20m
+  schedule: "30 0 * * *"
+  env:
+    - FOO=BAR
+  secret_files:
+    - /lain/app/deploy/secrets.json
+
+test:
+  script:
+    - make test
+
