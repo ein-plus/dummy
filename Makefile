@@ -4,11 +4,14 @@ PORT := 5000
 
 .PHONY: build
 build:
-	docker build --squash -t $(REPO):release-$(TAG) .
+	lain build
 
 .PHONY: push
 push:
-	docker push $(REPO):$(TAG)
+	lain use bei
+	lain push
+	docker tag $(REPO):release-$(TAG) $(REPO):latest
+	docker push $(REPO):latest
 
 .PHONY: run
 run:
