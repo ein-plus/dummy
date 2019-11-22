@@ -29,7 +29,12 @@ def index():
     except FileNotFoundError:
         secret = ''
 
-    res = {'env': dict(os.environ), 'secretfile': secret}
+    hosts = open('/etc/hosts').read()
+    res = {
+        'env': dict(os.environ),
+        'secretfile': secret,
+        'hosts': hosts,
+    }
     return json.dumps(res)
 
 
